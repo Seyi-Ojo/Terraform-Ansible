@@ -1,0 +1,34 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    timezone: Africa/Lagos
+  tasks:
+  - name: Install Aptitude
+    apt: 
+      name: aptitude
+      state: latest
+      update_cache: true
+
+  - name: Update & Upgrade Servers
+    apt:
+     update_cache: yes
+     upgrade: yes
+  
+  - name: Install required system packages
+    apt:
+      name: ['apache2']
+      state: latest
+  
+  - name: Install tzdata package
+    package:
+      name: tzdata
+      state: present
+
+  - name: Set timezone to Africa/Lagos
+    command: timedatectl set-timezone Africa/Lagos
+
+  - name: Display server hostname in html file
+    shell: echo "<h1> Hello World, I am one of Mayowa's servers and I am from $(hostname -f) </h1> <p> <br> Markup Language HTML <br> I created 3 EC2 instances and put them behind a load balancer, exported the IP addresses to host-inventory, added a domain name and created an Ansible script to set timezone to Africa/Lagos and deploy this website. </p> " > /var/www/html/index.html
+  
